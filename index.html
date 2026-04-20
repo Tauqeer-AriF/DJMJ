@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DJ MJ — Award-Winning Underground House DJ</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600;700;900&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
-<!-- Favicon: Gold & Black Vinyl Aesthetic -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23080808' stroke='%23d4a842' stroke-width='4'/><text y='68' x='50' font-family='Arial Black, sans-serif' font-weight='900' font-size='45' text-anchor='middle' fill='%23d4a842'>MJ</text></svg>">
 <style>
   :root {
-    --black: #080808;
+    --nav-px: 3rem;
+    --nav-py: 1.5rem;
+    --btn-size: 38px;
     --deep: #0d0d14;
     --gold: #d4a842;
     --gold-light: #f0c96a;
@@ -17,6 +18,7 @@
     --violet-dark: #3d0099;
     --white: #f0ede8;
     --grey: #666;
+    --black: #080808;
     --mid: #1a1a26;
   }
 
@@ -29,6 +31,7 @@
     color: var(--white);
     font-family: 'Montserrat', sans-serif;
     overflow-x: hidden;
+    scrollbar-gutter: stable;
     cursor: none;
   }
 
@@ -69,14 +72,22 @@
   /* NAV */
   nav {
     position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 1000;
-    padding: 1.5rem 3rem;
+    top: 0; left: 0;
+    width: 100%;
+    z-index: 2000; /* Highest layer to keep hamburger/logo above menu */
+    padding: var(--nav-py) var(--nav-px);
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
     backdrop-filter: blur(2px);
+    transition: background 0.4s ease, backdrop-filter 0.4s ease;
+  }
+
+  /* Remove nav styling when menu is open for a cleaner look */
+  nav.menu-open {
+    background: transparent !important;
+    backdrop-filter: none !important;
   }
 
   .nav-logo img {
@@ -126,55 +137,107 @@
   .nav-book:hover { background: var(--gold-light) !important; transform: scale(1.04); }
   .nav-book::after { display: none !important; }
 
-  /* HAMBURGER */
+  /* NEW PROFESSIONAL HAMBURGER */
   .hamburger {
     display: none;
-    flex-direction: column;
-    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
     cursor: none;
-    padding: 4px;
-    z-index: 1100;
+    z-index: 2100;
+    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 6px;
   }
 
   .hamburger span {
     display: block;
-    width: 28px; height: 2px;
+    height: 2px;
     background: var(--gold);
-    transition: transform 0.3s, opacity 0.3s;
-    transform-origin: center;
+    transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
   }
 
-  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-  .hamburger.open span:nth-child(2) { opacity: 0; }
-  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .hamburger span:nth-child(1) { width: 24px; }
+  .hamburger span:nth-child(2) { width: 16px; }
 
-  .mobile-menu {
-    display: none;
+  .hamburger.active span { background: var(--white); width: 24px; }
+  .hamburger.active span:nth-child(1) { transform: translateY(4px) rotate(45deg); width: 22px; }
+  .hamburger.active span:nth-child(2) { transform: translateY(-4px) rotate(-45deg); width: 22px; }
+
+  /* NEW PROFESSIONAL MOBILE MENU */
+  .mobile-nav {
     position: fixed;
     inset: 0;
-    background: rgba(8,8,8,0.98);
-    backdrop-filter: blur(20px);
-    z-index: 1050;
+    background: var(--black);
+    z-index: 1500;
+    display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    gap: 2.5rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s;
+    padding: 0 var(--nav-px);
+    transform: translateX(100%);
+    transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
   }
-  .mobile-menu.open { opacity: 1; pointer-events: all; }
-  .mobile-menu a {
+
+  .mobile-nav.open { transform: translateX(0); }
+
+  .mobile-nav-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .mobile-nav-item {
+    overflow: hidden;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.5s ease;
+  }
+
+  .mobile-nav.open .mobile-nav-item {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Staggered Entrance */
+  .mobile-nav.open .mobile-nav-item:nth-child(1) { transition-delay: 0.2s; }
+  .mobile-nav.open .mobile-nav-item:nth-child(2) { transition-delay: 0.3s; }
+  .mobile-nav.open .mobile-nav-item:nth-child(3) { transition-delay: 0.4s; }
+  .mobile-nav.open .mobile-nav-item:nth-child(4) { transition-delay: 0.5s; }
+  .mobile-nav.open .mobile-nav-item:nth-child(5) { transition-delay: 0.6s; }
+
+  .mobile-nav-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gold);
+    opacity: 0.5;
+  }
+
+  .mobile-nav-link {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 3.5rem;
-    letter-spacing: 0.1em;
+    font-size: clamp(3.5rem, 12vw, 6rem);
     color: var(--white);
     text-decoration: none;
-    transition: color 0.2s, transform 0.2s;
-    display: block;
-    text-align: center;
+    line-height: 1;
+    transition: color 0.3s ease;
   }
-  .mobile-menu a:hover { color: var(--gold); transform: translateX(10px); }
+
+  .mobile-nav-link:hover { color: var(--gold); }
+
+  .mobile-nav-footer {
+    margin-top: 4rem;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.8s;
+  }
+  .mobile-nav.open .mobile-nav-footer { opacity: 1; }
+
+  body.no-scroll { overflow: hidden; }
 
   /* HERO */
   .hero {
@@ -1014,13 +1077,11 @@
 
   /* MOBILE */
   @media (max-width: 900px) {
-    nav { padding: 1.2rem 1.5rem; }
-    .nav-links { display: none; }
-    .hamburger { display: none !important; }
-    .mobile-menu { display: none !important; }
-
+    :root { --nav-px: 1.5rem; --nav-py: 1.2rem; }
     .hero-content { padding: 0 1.5rem 4rem; }
     .waveform { display: none; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
 
     .about {
       grid-template-columns: 1fr;
@@ -1063,7 +1124,7 @@
   @media (max-width: 600px) {
     .hero-name { font-size: 5rem; }
     .hero-content { padding: 0 1rem 3.5rem; }
-    nav { padding: 1rem; }
+    :root { --nav-px: 1rem; --nav-py: 1rem; }
     .releases-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>
@@ -1084,20 +1145,42 @@
     <li><a href="#awards">Awards</a></li>
     <li><a href="#releases">Music</a></li>
     <li><a href="#radio">Radio</a></li>
-    <li><a href="#contact" class="nav-book">Book MJ</a></li>
+    <li><a href="#contact" class="nav-book">Book MJ</a></li> 
   </ul>
-  <button class="hamburger" id="hamburger" aria-label="Menu">
-    <span></span><span></span><span></span>
+  <button class="hamburger" id="menuToggle" aria-label="Toggle Menu">
+    <span></span>
+    <span></span>
   </button>
 </nav>
 
 <!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#about" class="menu-link">Bio</a>
-  <a href="#awards" class="menu-link">Awards</a>
-  <a href="#releases" class="menu-link">Music</a>
-  <a href="#radio" class="menu-link">Radio</a>
-  <a href="#contact" class="menu-link">Book MJ</a>
+<div class="mobile-nav" id="mobileNav">
+  <ul class="mobile-nav-links">
+    <li class="mobile-nav-item">
+      <span class="mobile-nav-num">01</span>
+      <a href="#about" class="mobile-nav-link">Bio</a>
+    </li>
+    <li class="mobile-nav-item">
+      <span class="mobile-nav-num">02</span>
+      <a href="#awards" class="mobile-nav-link">Awards</a>
+    </li>
+    <li class="mobile-nav-item">
+      <span class="mobile-nav-num">03</span>
+      <a href="#releases" class="mobile-nav-link">Music</a>
+    </li>
+    <li class="mobile-nav-item">
+      <span class="mobile-nav-num">04</span>
+      <a href="#radio" class="mobile-nav-link">Radio</a>
+    </li>
+    <li class="mobile-nav-item">
+      <span class="mobile-nav-num">05</span>
+      <a href="#contact" class="mobile-nav-link">Booking</a>
+    </li>
+  </ul>
+  <div class="mobile-nav-footer">
+    <p style="font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--grey); letter-spacing: 2px; text-transform: uppercase;">Direct Inquiries</p>
+    <a href="mailto:bookings_djmj@outlook.com" style="color: var(--gold); text-decoration: none; font-size: 0.9rem; margin-top: 0.5rem; display: block;">bookings_djmj@outlook.com</a>
+  </div>
 </div>
 
 <!-- HERO -->
@@ -1354,22 +1437,21 @@
     });
   });
 
-  // HAMBURGER
-  const hamburger = document.getElementById('hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
+  // NEW MOBILE MENU LOGIC
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileNav = document.getElementById('mobileNav');
+  const mobileLinks = document.querySelectorAll('.mobile-nav-link');
 
-  hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('open');
-    mobileMenu.classList.toggle('open');
-    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
-  });
+  function toggleMenu() {
+    menuToggle.classList.toggle('active');
+    mobileNav.classList.toggle('open');
+    navbar.classList.toggle('menu-open');
+    document.body.classList.toggle('no-scroll');
+  }
 
-  document.querySelectorAll('.menu-link').forEach(link => {
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('open');
-      mobileMenu.classList.remove('open');
-      document.body.style.overflow = '';
-    });
+  menuToggle.addEventListener('click', toggleMenu);
+  mobileLinks.forEach(link => {
+    link.addEventListener('click', toggleMenu);
   });
 
   // SCROLL REVEAL
